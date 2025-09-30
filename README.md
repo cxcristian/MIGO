@@ -34,3 +34,42 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## paleta de colores
+- #294380 → azul profundo
+- #69d2cd → turquesa medio
+- #b9f1d6 → turquesa pastel
+- #f1f6ce → amarillo verdoso suave
+- #ffffff → blanco
+
+## Ajuste de roles en la UI 
+
+
+#294380 (Azul profundo) Color primario
+
+- Navbar / Header background
+- Botones principales
+- Links importantes
+- Iconografía clave
+
+#69d2cd (Turquesa medio)  Color secundario / de acento
+
+- Botones secundarios
+- Hover states
+- Badges o highlights
+
+#b9f1d6 (Turquesa pastel claro) Fondo suave / secciones alternas
+
+- Background de secciones para diferenciar bloques
+- Tarjetas (cards)
+- Bloques secundarios que no deben competir con el azul
+
+#f1f6ce (Amarillo verdoso claro) Color de apoyo / contraste cálido
+
+Call to action suaves
+Notas, etiquetas o detalles decorativos
+Resaltar sin ser agresivo
+
+#ffffff (Blanco) Base y tipografía en fondos oscuros
+- Texto sobre azul ( #294380 )
+- Fondos principales
+- Espacios negativos para dar limpieza
