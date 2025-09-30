@@ -17,6 +17,7 @@ export default function NavBar() {
       {/* Links */}
       <div className="hidden md:flex space-x-6">
         <Link href="/" className="text-gray-700 hover:text-[#69d2cd]">Home</Link>
+        <Link href="../pages/Repaso" className="text-gray-700 hover:text-[#69d2cd]">Learning</Link>
       </div>
 
       {/* Botón hamburguesa - Mobile */}
