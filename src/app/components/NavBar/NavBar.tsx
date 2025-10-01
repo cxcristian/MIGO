@@ -35,9 +35,9 @@ export default function NavBar() {
   {/* Links - Mobile */}
   {isOpen && (
     <div className="md:hidden px-4 pb-4 space-y-2">
-      <a href="#" className="block text-gray-700 hover:text-[#69d2cd]">Home</a>
-      <a href="#" className="block text-gray-700 hover:text-[#69d2cd]">Services</a>
-      <a href="#" className="block text-gray-700 hover:text-[#69d2cd]">Contact</a>
+      <Link href="/" className="block text-gray-700 hover:text-[#69d2cd]">Home</Link>
+        <Link href="../pages/Repaso" className="block text-gray-700 hover:text-[#69d2cd]">Learning</Link>
+      
     </div>
   )}
 </nav>
