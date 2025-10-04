@@ -69,10 +69,11 @@ Debe tener un tono educativo y fácil de entender.
       },
     });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error in generateGuide API route:", error);
+    const message = error instanceof Error ? error.message : "Failed to generate guide";
     return NextResponse.json(
-      { error: error.message || "Failed to generate guide" },
+      { error: message },
       { status: 500 }
     );
   }
