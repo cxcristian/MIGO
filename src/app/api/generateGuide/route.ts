@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import jsPDF from 'jspdf';
-import autoTable, { RowInput, UserOptions } from 'jspdf-autotable';
+import jsPDF from "jspdf";
+import autoTable, { RowInput, UserOptions } from "jspdf-autotable";
 
 // ✅ Extender jsPDF para incluir lastAutoTable (sin usar any)
 interface jsPDFWithAutoTable extends jsPDF {
@@ -30,11 +30,17 @@ export async function POST(request: Request) {
     const geminiApiKey = apiKey || process.env.GEMINI_API_KEY;
 
     if (!geminiApiKey) {
-      return NextResponse.json({ error: 'No API key provided' }, { status: 400 });
+      return NextResponse.json(
+        { error: "No API key provided" },
+        { status: 400 }
+      );
     }
 
     if (!Array.isArray(notes) || notes.length === 0) {
-      return NextResponse.json({ error: 'No se proporcionaron notas válidas' }, { status: 400 });
+      return NextResponse.json(
+        { error: "No se proporcionaron notas válidas" },
+        { status: 400 }
+      );
     }
 
     const genAI = new GoogleGenerativeAI(geminiApiKey);
@@ -65,7 +71,11 @@ El formato de salida debe ser Markdown.
     const guideText = response.text();
 
     // ✅ Generar PDF
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" }) as jsPDFWithAutoTable;
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    }) as jsPDFWithAutoTable;
 
     const margin = 15;
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -81,23 +91,26 @@ El formato de salida debe ser Markdown.
 
     const writeWrappedText = (text: string, fontSize = 12, bold = false) => {
       doc.setFontSize(fontSize);
-      doc.setFont('helvetica', bold ? 'bold' : 'normal');
-      const splitText = doc.splitTextToSize(text, pageWidth - margin * 2);
-      splitText.forEach((line) => {
+      doc.setFont("helvetica", bold ? "bold" : "normal");
+      const splitText = doc.splitTextToSize(
+        text,
+        pageWidth - margin * 2
+      ) as string[];
+      splitText.forEach((line: string) => {
         checkAndAddPage(8);
         doc.text(line, margin, cursorY);
         cursorY += 7;
       });
     };
 
-    const lines = guideText.split('\n');
+    const lines = guideText.split("\n");
     let isTable = false;
     let tableHeaders: string[] = [];
     let tableBody: RowInput[] = [];
 
     for (const line of lines) {
       if (isTable) {
-        if (line.trim() === '') {
+        if (line.trim() === "") {
           isTable = false;
 
           const options: UserOptions = {
@@ -111,38 +124,48 @@ El formato de salida debe ser Markdown.
 
           autoTable(doc, options);
 
-          cursorY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : cursorY + 10;
+          cursorY = doc.lastAutoTable
+            ? doc.lastAutoTable.finalY + 10
+            : cursorY + 10;
           tableHeaders = [];
           tableBody = [];
-        } else if (line.startsWith('|---')) {
+        } else if (line.startsWith("|---")) {
           continue;
         } else {
-          tableBody.push(line.split('|').filter(c => c.length > 0).map(item => item.trim()));
+          tableBody.push(
+            line
+              .split("|")
+              .filter((c) => c.length > 0)
+              .map((item) => item.trim())
+          );
         }
         continue;
       }
 
-      if (line.startsWith('# ')) {
+      if (line.startsWith("# ")) {
         checkAndAddPage(14);
         writeWrappedText(line.substring(2), 22, true);
         cursorY += 4;
-      } else if (line.startsWith('## ')) {
+      } else if (line.startsWith("## ")) {
         checkAndAddPage(12);
         writeWrappedText(line.substring(3), 18, true);
         cursorY += 3;
-      } else if (line.startsWith('### ')) {
+      } else if (line.startsWith("### ")) {
         checkAndAddPage(10);
         writeWrappedText(line.substring(4), 14, true);
-      } else if (line.startsWith('---')) {
+      } else if (line.startsWith("---")) {
         checkAndAddPage(5);
         doc.setDrawColor(105, 210, 205);
         doc.setLineWidth(1);
         doc.line(margin, cursorY, pageWidth - margin, cursorY);
         cursorY += 5;
-      } else if (line.startsWith('|')) {
+      } else if (line.startsWith("|")) {
         isTable = true;
-        tableHeaders = line.split('|').filter(c => c.length > 0).map(item => item.trim());
-      } else if (line.startsWith('* ') || line.startsWith('- ')) {
+        tableHeaders = line
+          .split("|")
+          .filter((c) => c.length > 0)
+          .map((item) => item.trim());
+      } else if (line.startsWith("* ") || line.startsWith("- ")) {
         const bulletText = `• ${line.substring(2)}`;
         writeWrappedText(bulletText, 12);
         cursorY += 2;
@@ -160,10 +183,10 @@ El formato de salida debe ser Markdown.
         "Content-Disposition": 'attachment; filename="study-guide.pdf"',
       },
     });
-
   } catch (error) {
     console.error("Error in generateGuide API route:", error);
-    const message = error instanceof Error ? error.message : "Failed to generate guide";
+    const message =
+      error instanceof Error ? error.message : "Failed to generate guide";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
