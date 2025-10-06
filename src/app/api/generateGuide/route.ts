@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import autoTable, { RowInput, UserOptions } from 'jspdf-autotable';
+
+// ✅ Extender jsPDF para incluir lastAutoTable (sin usar any)
+interface jsPDFWithAutoTable extends jsPDF {
+  lastAutoTable?: {
+    finalY: number;
+  };
+}
 
 // ✅ Definir interfaces
 interface Note {
@@ -58,7 +65,7 @@ El formato de salida debe ser Markdown.
     const guideText = response.text();
 
     // ✅ Generar PDF
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" }) as jsPDFWithAutoTable;
 
     const margin = 15;
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -86,21 +93,25 @@ El formato de salida debe ser Markdown.
     const lines = guideText.split('\n');
     let isTable = false;
     let tableHeaders: string[] = [];
-    let tableBody: string[][] = [];
+    let tableBody: RowInput[] = [];
 
     for (const line of lines) {
       if (isTable) {
         if (line.trim() === '') {
           isTable = false;
-          autoTable(doc, {
+
+          const options: UserOptions = {
             head: [tableHeaders],
             body: tableBody,
             startY: cursorY,
             margin: { left: margin },
             styles: { fontSize: 10 },
             headStyles: { fillColor: [105, 210, 205] },
-          });
-          cursorY = (doc as any).lastAutoTable.finalY + 10;
+          };
+
+          autoTable(doc, options);
+
+          cursorY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : cursorY + 10;
           tableHeaders = [];
           tableBody = [];
         } else if (line.startsWith('|---')) {
