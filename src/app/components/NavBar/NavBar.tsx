@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link";
 import { useState } from "react"
+import ApiKeyInput from "../ApiKeyInput/ApiKeyInput";
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -15,16 +16,18 @@ export default function NavBar() {
       </div>
 
       {/* Links */}
-      <div className="hidden md:flex space-x-6">
+      <div className="hidden md:flex items-center space-x-6">
         <Link href="/" className="text-gray-700 hover:text-[#69d2cd]">Home</Link>
         <Link href="../pages/Repaso" className="text-gray-700 hover:text-[#69d2cd]">Learning</Link>
+        <ApiKeyInput />
       </div>
 
       {/* Botón hamburguesa - Mobile */}
-      <div className="md:hidden">
+      <div className="md:hidden flex items-center">
+        <ApiKeyInput />
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="text-[#294380] hover:text-[#69d2cd] focus:outline-none text-2xl"
+          className="text-[#294380] hover:text-[#69d2cd] focus:outline-none text-2xl ml-4"
         >
           {isOpen ? "✕" : "☰"}
         </button>

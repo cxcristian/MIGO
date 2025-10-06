@@ -24,7 +24,6 @@ export default function NoteTaker({ notes, addNote }: NoteTakerProps) {
 
     if (subject !== '' && wordCount >= 3) {
       addNote({ subject, content });
-      setNewSubject('');
       setNewContent('');
     } else {
       if (subject === '') {
